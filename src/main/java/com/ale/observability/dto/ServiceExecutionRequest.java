@@ -13,4 +13,8 @@ import java.util.List;
 public class ServiceExecutionRequest {
 
     private List<Object> params = new ArrayList<>();
+
+    public List<Object> getParams() {
+        return params == null ? new ArrayList<>() : params;
+    }
 }

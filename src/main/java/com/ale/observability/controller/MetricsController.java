@@ -46,14 +46,17 @@ public class MetricsController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size
     ) {
-        List<LogEntryResponse> content = metricsService.getLogs(service, status, from, to, page, size);
+        int safePage = Math.max(page, 0);
+        int safeSize = Math.max(size, 1);
+
+        List<LogEntryResponse> content = metricsService.getLogs(service, status, from, to, safePage, safeSize);
         long totalElements = metricsService.countLogs(service, status, from, to);
-        int totalPages = (int) Math.ceil((double) totalElements / size);
+        int totalPages = totalElements == 0 ? 0 : (int) Math.ceil((double) totalElements / safeSize);
 
         Map<String, Object> response = new LinkedHashMap<>();
         response.put("content", content);
-        response.put("page", page);
-        response.put("size", size);
+        response.put("page", safePage);
+        response.put("size", safeSize);
         response.put("totalElements", totalElements);
         response.put("totalPages", totalPages);
 
